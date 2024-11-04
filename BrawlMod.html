@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrawlMod</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="settings-button" title="Settings">
+        <span>⚙️</span>
+    </button>
+    <div id="settings-popout" class="settings-popout">
+        <div class="settings-tabs">
+            <button class="tab-button active" data-tab="general">General</button>
+            <button class="tab-button" data-tab="ui">UI</button>
+            <button class="tab-button" data-tab="advanced">Advanced</button>
+        </div>
+        <div class="settings-content">
+            <div class="tab-content active" id="general-tab">
+                <label>
+                    <span>Autosave</span>
+                    <input type="checkbox" id="autosave-toggle" checked>
+                </label>
+                <label>
+                    <span>Autosave Interval</span>
+                    <select id="autosave-interval">
+                        <option value="10000">10 seconds</option>
+                        <option value="1000">1 second</option>
+                        <option value="2000">2 seconds</option>
+                        <option value="5000">5 seconds</option>
+                        <option value="20000">20 seconds</option>
+                        <option value="40000">40 seconds</option>
+                        <option value="60000">60 seconds</option>
+                        <option value="120000">120 seconds</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Items per Page</span>
+                    <input type="number" id="items-per-page" value="10">
+                </label>
+                <label>
+                    <span>History Limit</span>
+                    <input type="number" id="history-limit" value="100">
+                </label>
+            </div>
+            <div class="tab-content" id="ui-tab">
+                <label>
+                    <span>Dark Mode</span>
+                    <input type="checkbox" id="dark-mode-toggle" checked>
+                </label>
+                <label>
+                    <span>Background Color</span>
+                    <input type="color" id="background-color-picker" value="#f2f2f2">
+                </label>
+                <label>
+                    <span>Tab Color</span>
+                    <input type="color" id="tab-color-picker" value="#4CAF50">
+                </label>
+                <label>
+                    <span>Animations</span>
+                    <input type="checkbox" id="animations-toggle" checked>
+                </label>
+                <label>
+                    <span>Show Arrows</span>
+                    <input type="checkbox" id="show-arrows-toggle">
+                </label>
+                <label>
+                    <span>Settings Float</span>
+                    <input type="checkbox" id="settings-float-toggle">
+                </label>
+                <label>
+                    <span>Full Width Mode</span>
+                    <input type="checkbox" id="full-width-toggle">
+                </label>
+            </div>
+            <div class="tab-content" id="advanced-tab">
+                <label>
+                    <span>Low-End Mode</span>
+                    <input type="checkbox" id="low-end-mode-toggle">
+                </label>
+                <label>
+                    <span>Drag and Drop Box</span>
+                    <input type="checkbox" id="drag-drop-toggle" checked>
+                </label>
+                <label>
+                    <span>Fast File Delete</span>
+                    <input type="checkbox" id="fast-file-delete-toggle">
+                </label>
+                <label>
+                    <span>Fast Rows Delete</span>
+                    <input type="checkbox" id="fast-rows-delete-toggle" checked>
+                </label>
+                <label>
+                    <span>Float Columns</span>
+                    <input type="checkbox" id="float-columns-toggle" checked>
+                </label>
+                <label>
+                    <span>Row Dragging</span>
+                    <input type="checkbox" id="enable-row-dragging-toggle" checked>
+                </label>
+                <label>
+                    <span>More Bullets in One Attack</span>
+                    <input type="checkbox" id="enable-more-bullets-toggle">
+                </label>
+                <label>
+                    <span>Row Deleting</span>
+                    <input type="checkbox" id="enable-row-deleting-toggle">
+                </label>
+                <label>
+                    <span>Fullscreen Mode</span>
+                    <input type="checkbox" id="fullscreen-toggle">
+                </label>
+                <button class="button" onclick="createNewCSV()">Create New CSV</button>
+                <button class="button" onclick="renameCSVFile()">Rename CSV File</button>
+                <button class="button" onclick="addNewRow()">Add New Row</button>
+                <button class="button" onclick="addNewColumn()">Add New Column</button>
+                <button class="button" onclick="changeAll()">Change All</button>
+                <button class="button" onclick="toggleRowDeleteMode()">Toggle Row Delete Mode</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>BrawlStars Editor</h1>
+        <div id="loading-container" class="loading-container" style="display: none;">
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <div class="loading-text">Loading...</div>
+        </div>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search...">
+            <select id="search-options">
+                <option value="all">All</option>
+            </select>
+            <button class="button" onclick="searchTable()">Search</button>
+        </div>
+        <div class="top-buttons">
+            <button class="button" onclick="loadCSV()">Load CSV</button>
+            <button class="button" onclick="downloadCSV()">Download CSV</button>
+            <button class="button" onclick="downloadJSON()">Download JSON</button>
+            <button class="button" onclick="document.getElementById('jsonFileInput').click();">Load JSON</button>
+            <button class="button" onclick="resetValues()">Reset Values</button>
+            <div style="margin-left:auto;"></div>
+            <button class="button" onclick="undo()">Undo</button>
+            <button class="button" onclick="redo()">Redo</button>
+            <button class="button" onclick="generateRandomOP()">Generate Random OP</button>
+        </div>
+        <div class="dropbox" id="dropbox" onclick="loadCSV()">
+            <div class="upload-text">
+                <div style="font-size: 2em; margin-bottom: 10px;">📁</div>
+                Drag and drop your CSV files here or click to upload
+            </div>
+            <input type="file" id="csvFileInput" class="hidden-input" accept=".csv" multiple onchange="loadCSVFile(event)">
+        </div>
+        <div id="file-buttons" class="file-buttons">
+            <div class="trash-bin" id="trash-bin" onclick="toggleDeleteMode()">🗑</div>
+        </div>
+        <div class="table-container" id="table-container">
+            <table>
+                <thead>
+                    <tr id="table-header"></tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <input type="file" id="jsonFileInput" class="hidden" accept=".json" onchange="loadJSONFile(event)">
+
+    <div class="floating-arrows" id="floating-arrows">
+        <button onmousedown="startScrolling('up')" onmouseup="stopScrolling()">↑</button>
+        <button onmousedown="startScrolling('down')" onmouseup="stopScrolling()">↓</button>
+        <button onmousedown="startScrolling('left')" onmouseup="stopScrolling()">←</button>
+        <button onmousedown="startScrolling('right')" onmouseup="stopScrolling()">→</button>
+    </div>
+
+    <ul class="custom-menu" id="row-context-menu">
+        <li onclick="deleteRow()">Delete Row</li>
+    </ul>
+
+    <ul class="custom-menu" id="file-context-menu">
+        <li onclick="deleteFile()">Delete File</li>
+        <li onclick="openFile()">Open File</li>
+        <li onclick="openFileInNewTab()">Open File in New Tab</li>
+        <li onclick="downloadFile()">Download File</li>
+        <li onclick="renameFile()">Rename File</li>
+    </ul>
+
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/fileOperations.js"></script>
+    <script src="js/tableOperations.js"></script>
+    <script src="js/randomGenerator.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (BrawlStarsEditor.settings.darkMode) {
+                document.body.classList.add('dark-mode');
+                document.documentElement.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
